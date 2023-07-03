@@ -129,7 +129,7 @@ def get_info() -> dict[str, str]:
 
 def display_results(results: str) -> None:
     layout = [
-        [sg.T(results)],
+        [sg.T("\n".join(results.split(" ")))],
         [sg.Button(button_text="Copy to Clipboard", key="COPY"), sg.Cancel()],
     ]
 
@@ -139,6 +139,9 @@ def display_results(results: str) -> None:
 
     if event == "COPY":
         pyperclip.copy(results)
+        sg.popup_auto_close(
+            "Copied to clipboard =)", title="Success!", auto_close_duration=1
+        )
 
     w.close()
 
