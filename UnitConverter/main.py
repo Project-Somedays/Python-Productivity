@@ -2,14 +2,14 @@
 Author: Project Somedays
 """
 import PySimpleGUI as sg
-from enum import Enum
+from enum import StrEnum
 from decimal import Decimal
 from typing import Any
 
 # FIXME: Not recognising when units are changed
 
 
-class U(Enum):
+class U(StrEnum):
     KM = "km"
     M = "m"
     CM = "cm"
