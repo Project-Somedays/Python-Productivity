@@ -46,7 +46,9 @@ def main():
         print("That already exists! Belay that override!")
         return
     os.mkdir(new_path)
-    new_file_path = os.path.join(new_path, project_name + ".pde")
+    first_iteration_path = os.path.join(new_path, project_name + "_01")
+    os.mkdir(first_iteration_path)
+    new_file_path = os.path.join(first_iteration_path, project_name + "_01.pde")
     print(f"Copying the template file into new directory: {new_file_path}")
     shutil.copy(TEMPLATE_PATH, new_file_path)
     print("Opening the file")

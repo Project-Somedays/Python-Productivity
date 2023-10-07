@@ -12,3 +12,9 @@ void draw(){
   }
 }
 
+void keyPressed() {
+  if (keyCode == ' ') {
+    noLoop();
+    saveFrame(sketchname + "_" + year()+"-"+month()+"-"+day()+"_"+hour()+"-"+minute()+"-"+second() + ".png");
+  }
+}
