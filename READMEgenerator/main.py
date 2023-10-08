@@ -8,6 +8,7 @@ Plus, they were doing my head in.
 import os
 import PySimpleGUI as sg
 from icecream import ic
+from git import Repo
 
 def convert_subdirectory_to_link(base_dir: str, dir: str) -> str:
     """Returns link image"""
@@ -20,6 +21,22 @@ def convert_directory_to_link(dir: str) -> str:
 def overwrite_filecontents(readme_file_path: str, lines: str) -> None:
     with open(readme_file_path, "w") as fh:
         fh.writelines("\n".join(lines))
+
+def update_changes_to_git(repo_path: str, commit_message: str):
+
+     # Initialize the Git repository
+    repo = Repo(repo_path)
+
+    # Add all changes to the staging area
+    repo.git.add('--all')
+
+    # Commit the changes with a message
+    commit_message = "Your commit message here"
+    repo.index.commit(commit_message)
+
+    # Push the changes to the remote repository
+    origin = repo.remote(name='origin')
+    origin.push()
 
 
 base_exclude = [".git"]
@@ -48,6 +65,10 @@ def main():
     ic(lines)
     print("Constructing README file")
     overwrite_filecontents(readme_file_path=target_readme_file, lines = lines)
+    print("Pushing to git")
+    commit_message = sg.PopupGetText("Enter your commit message")
+    update_changes_to_git(repo_path = base, commit_message=commit_message)
+
     
     
 
