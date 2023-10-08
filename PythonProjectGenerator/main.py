@@ -39,8 +39,14 @@ def main():
     new_file_path = os.path.join(new_path, "main.py")
     print(f"Copying the template file into new directory: {new_file_path}")
     shutil.copy(TEMPLATE_PATH, new_file_path)
-    subprocess.run(['code', new_path], check=True)
-
+    
+    try:
+    # Use the 'code' command to open the specified directory in VS Code
+        subprocess.Popen([r"C:\Users\proje\AppData\Local\Programs\Microsoft VS Code\Code.exe", new_path])
+    except FileNotFoundError:
+        print("Visual Studio Code (code command) not found. Make sure it's in your system's PATH.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
 
 if __name__ == "__main__":
     main()
