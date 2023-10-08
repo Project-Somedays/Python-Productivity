@@ -5,6 +5,7 @@ Creates a copy of the template in a target folder
 import PySimpleGUI as sg
 import os
 import shutil
+import subprocess
 
 TEMPLATE_PATH = r"C:\Users\proje\OneDrive\Documents\Python-Productivity\PythonProjectGenerator\template.py"
 
@@ -38,6 +39,7 @@ def main():
     new_file_path = os.path.join(new_path, "main.py")
     print(f"Copying the template file into new directory: {new_file_path}")
     shutil.copy(TEMPLATE_PATH, new_file_path)
+    subprocess.run(['code', new_path], check=True)
 
 
 if __name__ == "__main__":
