@@ -10,69 +10,86 @@ import PySimpleGUI as sg
 from icecream import ic
 from git import Repo
 
+
 def convert_subdirectory_to_link(base_dir: str, dir: str) -> str:
     """Returns link image"""
     image_name = f"{base_dir}/{dir}.png"
     return f'<a href = "{base_dir}/{dir}"><img src="{image_name}" width="100" alt="{image_name}"></a>'
 
+
 def convert_directory_to_link(dir: str) -> str:
     return f'## [{dir}]({dir.replace(" ","%20")})'
+
 
 def overwrite_filecontents(readme_file_path: str, lines: str) -> None:
     with open(readme_file_path, "w") as fh:
         fh.writelines("\n".join(lines))
 
-def update_changes_to_git(repo_path: str, commit_message: str):
 
-     # Initialize the Git repository
+def update_changes_to_git(repo_path: str, commit_message: str):
+    # Initialize the Git repository
     repo = Repo(repo_path)
 
     # Add all changes to the staging area
-    repo.git.add('--all')
+    repo.git.add("--all")
 
     # Commit the changes with a message
     commit_message = "Your commit message here"
     repo.index.commit(commit_message)
 
     # Push the changes to the remote repository
-    origin = repo.remote(name='origin')
+    origin = repo.remote(name="origin")
     origin.push()
 
 
 base_exclude = [".git"]
 
+
 def main():
     """Do the needful"""
     base = sg.PopupGetFolder("Choose the base root of the walk")
-    target_readme_file = sg.PopupGetFile("Please choose the target README.md file to overwrite")
+    target_readme_file = sg.PopupGetFile(
+        "Please choose the target README.md file to overwrite"
+    )
     if os.path.splitext(target_readme_file)[1] != ".md":
         raise ValueError("Not a .md file!")
     ic(base)
-    project_folders = [dir for dir in os.listdir(base) if os.path.isdir(os.path.join(base,dir)) and dir not in base_exclude] #if os.path.isdir(dir)]
+    project_folders = [
+        dir
+        for dir in os.listdir(base)
+        if os.path.isdir(os.path.join(base, dir)) and dir not in base_exclude
+    ]  # if os.path.isdir(dir)]
     ic(project_folders)
 
-    lines = ["# Creative-Coding-Processing", "Creative Coding Projects written in Processing. Mostly in progress."]
+    lines = [
+        "# Creative-Coding-Processing",
+        "Creative Coding Projects written in Processing. Mostly in progress.",
+    ]
 
     for project_folder in project_folders:
         lines.append(convert_directory_to_link(project_folder))
         project_subfolder_path = os.path.join(base, project_folder)
         ic(project_subfolder_path)
-        project_subfolders = [dir for dir in os.listdir(project_subfolder_path) if os.path.isdir(os.path.join(project_subfolder_path,dir))]
+        project_subfolders = [
+            dir
+            for dir in os.listdir(project_subfolder_path)
+            if os.path.isdir(os.path.join(project_subfolder_path, dir))
+        ]
         ic(project_subfolders)
         for project_subfolder in project_subfolders:
-            lines.append(convert_subdirectory_to_link(base_dir = project_folder, dir = project_subfolder))
+            lines.append(
+                convert_subdirectory_to_link(
+                    base_dir=project_folder, dir=project_subfolder
+                )
+            )
 
     ic(lines)
     print("Constructing README file")
-    overwrite_filecontents(readme_file_path=target_readme_file, lines = lines)
-    print("Pushing to git")
+    overwrite_filecontents(readme_file_path=target_readme_file, lines=lines)
     commit_message = sg.PopupGetText("Enter your commit message")
-    update_changes_to_git(repo_path = base, commit_message=commit_message)
-
-    
-    
-
-    
+    print("Pushing to git")
+    update_changes_to_git(repo_path=base, commit_message=commit_message)
+    print("Success!")
 
 
 if __name__ == "__main__":
