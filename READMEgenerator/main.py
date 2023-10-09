@@ -34,7 +34,6 @@ def update_changes_to_git(repo_path: str, commit_message: str):
     repo.git.add("--all")
 
     # Commit the changes with a message
-    commit_message = "Your commit message here"
     repo.index.commit(commit_message)
 
     # Push the changes to the remote repository
