@@ -9,6 +9,7 @@ import os
 import PySimpleGUI as sg
 from icecream import ic
 from git import Repo
+from decouple import config
 
 
 def convert_subdirectory_to_link(base_dir: str, dir: str) -> str:
@@ -46,10 +47,10 @@ base_exclude = [".git"]
 
 def main():
     """Do the needful"""
-    base = sg.PopupGetFolder("Choose the base root of the walk")
-    target_readme_file = sg.PopupGetFile(
-        "Please choose the target README.md file to overwrite"
-    )
+    base = config("BASEFOLDER") # sg.PopupGetFolder("Choose the base root of the walk")
+    target_readme_file = config("README") #sg.PopupGetFile(
+    #     "Please choose the target README.md file to overwrite"
+    # )
     if os.path.splitext(target_readme_file)[1] != ".md":
         raise ValueError("Not a .md file!")
     ic(base)
