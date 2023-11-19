@@ -12,7 +12,8 @@ def main():
         to_iterate_dirname = os.path.basename(to_iterate_fp)
         ic(to_iterate_dirname)
         
-        new_folder_name = sg.PopupGetText("Choose your new folder name: ", default_text=os.path.basename(to_iterate_fp))
+        # get the folder name and replace all the spaces with _
+        new_folder_name = sg.PopupGetText("Choose your new folder name: ", default_text=os.path.basename(to_iterate_fp)).replace(" ", "_")
         ic(new_folder_name)
         
         parent_folder = os.path.dirname(to_iterate_fp)
