@@ -5,17 +5,31 @@ Creates a copy of the template in a target folder
 import os
 import shutil
 import PySimpleGUI as sg
+from enum import StrEnum, auto
+from icecream import ic
 
 TEMPLATE_PATH = r"C:\Users\proje\OneDrive\Documents\Python-Productivity\ProcessingProjectGenerator\template.pde"
 
 
+class K(StrEnum):
+    PROJECTNAME = auto()
+    FOLDER = auto()
+    PATHVIEW = auto()
+    ISBASEPROJECT = auto()
+    SUBMIT = "Submit"
+    CANCEL = "Cancel"
+
+
 def get_folder_and_filename() -> dict[str, str]:
     layout = [
-        [sg.T("Project Name: "), sg.In(key="PROJ")],
+        [sg.T("Project Name: "), sg.In(key=K.PROJECTNAME.value)],
         [
             sg.T("Choose project root folder"),
-            sg.FolderBrowse(key="FOLDER"),
-            sg.T(key="PATH"),
+            sg.FolderBrowse(key=K.FOLDER.value),
+        ],
+        [
+            sg.T(key=K.PATHVIEW.value),
+            sg.Checkbox("New Base Project?", key=K.ISBASEPROJECT.value, default=True),
         ],
         [sg.Submit(), sg.Cancel()],
     ]
@@ -25,7 +39,7 @@ def get_folder_and_filename() -> dict[str, str]:
         if event in ["Cancel", sg.WIN_CLOSED]:
             break
         elif event == "FOLDER":
-            window["PATH"].update(values["FOLDER"])
+            window["PATH"].update(values[K.FOLDER.value])
         elif event == "Submit":
             break
         else:
@@ -39,17 +53,25 @@ def main():
     user_input: dict[str, str] = get_folder_and_filename()
     project_name = user_input["PROJ"].replace(" ", "_")
     target = user_input["FOLDER"]
+
     print("Making folder")
     new_path = os.path.join(target, project_name)
-    print(f"Proposed folder path: {new_path}")
+    ic(new_path)
     if os.path.exists(new_path):
         print("That already exists! Belay that override!")
         return
+
     os.mkdir(new_path)
-    first_iteration_path = os.path.join(new_path, project_name + "_01")
-    os.mkdir(first_iteration_path)
-    new_file_path = os.path.join(first_iteration_path, project_name + "_01.pde")
-    print(f"Copying the template file into new directory: {new_file_path}")
+    print("Copying file")
+    if user_input[K.ISBASEPROJECT.value]:
+        print("Making subfolder")
+        first_iteration_path = os.path.join(new_path, project_name + "_01")
+        os.mkdir(first_iteration_path)
+        new_file_path = os.path.join(first_iteration_path, project_name + "_01.pde")
+    else:
+        new_file_path = os.path.join(new_path, project_name + "_01.pde")
+    print(f"Copying the template file into new directory")
+    ic(new_file_path)
     shutil.copy(TEMPLATE_PATH, new_file_path)
     print("Opening the file")
     os.startfile(new_file_path)
