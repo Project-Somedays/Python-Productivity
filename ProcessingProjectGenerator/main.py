@@ -1,12 +1,11 @@
 """
 Creates a copy of the template in a target folder
 """
-
+from enum import StrEnum, auto
+from icecream import ic
 import os
 import shutil
 import PySimpleGUI as sg
-from enum import StrEnum, auto
-from icecream import ic
 
 TEMPLATE_PATH = r"C:\Users\proje\OneDrive\Documents\Python-Productivity\ProcessingProjectGenerator\template.pde"
 
@@ -51,11 +50,14 @@ def get_folder_and_filename() -> dict[str, str]:
 def main():
     print("Getting the project name and target")
     user_input: dict[str, str] = get_folder_and_filename()
-    project_name = user_input["PROJ"].replace(" ", "_")
-    target = user_input["FOLDER"]
+    project_name = user_input[K.PROJECTNAME.value].replace(" ", "_")
+    target = user_input[K.FOLDER.value]
 
     print("Making folder")
-    new_path = os.path.join(target, project_name)
+    if user_input[K.ISBASEPROJECT.value]:
+        new_path = os.path.join(target, project_name)
+    else:
+        new_path = os.path.join(target, project_name + "_1")
     ic(new_path)
     if os.path.exists(new_path):
         print("That already exists! Belay that override!")
@@ -70,7 +72,7 @@ def main():
         new_file_path = os.path.join(first_iteration_path, project_name + "_01.pde")
     else:
         new_file_path = os.path.join(new_path, project_name + "_01.pde")
-    print(f"Copying the template file into new directory")
+    print("Copying the template file into new directory")
     ic(new_file_path)
     shutil.copy(TEMPLATE_PATH, new_file_path)
     print("Opening the file")
