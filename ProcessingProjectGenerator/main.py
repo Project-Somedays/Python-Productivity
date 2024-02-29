@@ -57,7 +57,7 @@ def main():
     if user_input[K.ISBASEPROJECT.value]:
         new_path = os.path.join(target, project_name)
     else:
-        new_path = os.path.join(target, project_name + "_1")
+        new_path = os.path.join(target, project_name + "_01")
     ic(new_path)
     if os.path.exists(new_path):
         print("That already exists! Belay that override!")
